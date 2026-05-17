@@ -1,100 +1,57 @@
-# 🚗 LKA System – Model Based Design using MATLAB/Simulink
+# Lateral Vehicle Guidance System using MATLAB/Simulink
 
-## 📌 Project Overview
+## Overview
 
-This project presents the design, modeling and validation of a **Lateral Guidance System (LKA – Lane Keeping Assistance)** developed using a **Model Based Design (MBD)** methodology under **MATLAB/Simulink**.
+This project presents the modeling, simulation and validation of a lateral vehicle guidance system developed using a Model Based Design (MBD) approach under MATLAB/Simulink.
 
-The objective is to control a vehicle moving on a winding road while minimizing the lateral trajectory error using a PID controller and Stateflow supervision.
+The objective is to design a control architecture capable of ensuring trajectory tracking on a winding road while minimizing the lateral tracking error and maintaining vehicle stability.
 
-The project includes:
+The developed system integrates:
 
-- Vehicle dynamic modeling
-- Trajectory generation
-- PID lateral controller
-- Stateflow supervision
-- MIL / SIL / PIL validation
-- 2D and 3D visualization
-- SysML system modeling
+- a 2D kinematic vehicle model,
+- trajectory generation,
+- a PID-based lateral controller,
+- Stateflow supervision,
+- MIL, SIL and PIL validation workflows,
+- 2D and 3D visualization tools.
 
----
-
-# 🧠 Main Features
-
-✅ 2D kinematic bicycle vehicle model  
-✅ Trajectory tracking on sinusoidal roads  
-✅ PID lateral controller  
-✅ Stateflow finite state machine (FSM)  
-✅ Dashboard for scenario selection  
-✅ Multiple simulation scenarios  
-✅ MIL / SIL / PIL validation workflow  
-✅ 2D trajectory visualization  
-✅ 3D vehicle simulation  
+This project was developed as part of the Model Based Design module.
 
 ---
 
-# 🏗️ System Architecture
+# Project Objectives
 
-The global architecture is organized into several subsystems:
+The main objective of the project is to design and validate a lateral guidance system able to follow a reference trajectory under different operating conditions.
 
-- **Environment**
-  - Reference trajectory generation
-  - Scenario management
+The project focuses on:
 
-- **Controller**
-  - Lateral and orientation error computation
-  - PID steering control
-
-- **Plant**
-  - Vehicle dynamic model
-
-- **Supervision**
-  - Stateflow FSM
-
-- **Visualization**
-  - 2D plots
-  - Scopes
-  - 3D simulation
+- modeling the vehicle dynamics,
+- implementing a closed-loop control system,
+- minimizing trajectory tracking errors,
+- validating generated embedded code,
+- analyzing system behavior through simulations and visualization tools.
 
 ---
 
-# 📂 Repository Structure
+# System Description
 
-```text
-.
-├── README.md
-├── simulink
-│   ├── MIL
-│   │   ├── MIL.slx
-│   │   ├── MIL_Visualisation.slx
-│   │   └── visualisation.slx
-│   │
-│   ├── SIL
-│   │   ├── SIL_controller.slx
-│   │   ├── SIL_MIL.slx
-│   │   ├── controller_pbs.mexw64
-│   │   └── controller_sbs.mexw64
-│   │
-│   └── PIL
-│       ├── PIL_controller.slx
-│       └── PIL_MIL.slx
-│
-├── docs
-│   └── report.pdf
-│
-└── images
-    ├── architecture.png
-    ├── stateflow.png
-    ├── simulation2D.png
-    └── simulation3D.png
-```
+The implemented architecture is based on a closed-loop control structure composed of several interconnected subsystems:
+
+- Environment subsystem responsible for trajectory generation,
+- Vehicle dynamic model (Plant),
+- PID controller,
+- Stateflow supervision logic,
+- Visualization and monitoring blocks.
+
+The controller continuously computes the steering command according to the trajectory tracking error and vehicle orientation error.
 
 ---
 
-# ⚙️ Vehicle Dynamic Model
+# Vehicle Dynamic Model
 
 The vehicle is modeled using a simplified 2D kinematic bicycle model.
 
-## Model Equations
+The system equations are defined as:
 
 \[
 \dot{x} = v \cos(\psi)
@@ -105,199 +62,262 @@ The vehicle is modeled using a simplified 2D kinematic bicycle model.
 \]
 
 \[
-\dot{\psi} = \frac{v}{L}\tan(\delta)
+\dot{\psi} = \frac{v}{L} \tan(\delta)
 \]
 
 Where:
 
-- \(x\): longitudinal position
-- \(y\): lateral position
-- \(\psi\): yaw angle
-- \(\delta\): steering angle
-- \(v\): vehicle speed
-- \(L\): wheelbase
+| Variable | Description |
+|---|---|
+| \(x\) | Longitudinal position |
+| \(y\) | Lateral position |
+| \(\psi\) | Vehicle orientation angle |
+| \(\delta\) | Steering angle |
+| \(v\) | Vehicle speed |
+| \(L\) | Vehicle wheelbase |
+
+The adopted assumptions are:
+
+- constant longitudinal speed,
+- planar vehicle motion,
+- simplified kinematic behavior,
+- direct steering actuation.
 
 ---
 
-# 🎯 Control Strategy
+# Simulink Architecture
 
-The steering command is generated using a PID controller based on:
+The global Simulink architecture is organized into multiple subsystems in order to ensure modularity and readability.
 
-- lateral error
-- orientation error
+## Global Architecture
 
-The PID parameters are tuned using:
+_Insert global Simulink architecture image here._
 
-- **Simulink PID Tuner**
+The main subsystems are:
+
+### Environment
+
+Responsible for:
+
+- generating reference trajectories,
+- selecting simulation scenarios,
+- introducing disturbances.
+
+### Controller
+
+Responsible for:
+
+- lateral error computation,
+- orientation error computation,
+- steering command generation using PID control.
+
+### Plant
+
+Implements the vehicle dynamic model.
+
+### Supervision
+
+Implements the Stateflow finite state machine managing operating modes.
+
+### Visualization
+
+Contains:
+
+- XY Graph visualization,
+- scopes,
+- vehicle visualization,
+- 3D simulation.
 
 ---
 
-# 🔄 Stateflow Supervision
+# Reference Trajectory Generation
 
-The FSM manages system operating modes:
+Several reference trajectories are implemented to evaluate system behavior under different conditions.
 
-- Init
-- Standby
-- Nominal
-- Emergency
+The scenario selection is performed dynamically using a Dashboard interface integrated into Simulink.
+
+## Scenario Generation Block
+
+_Insert scenario generation block image here._
+
+Implemented scenarios include:
+
+- nominal sinusoidal trajectory,
+- fast varying trajectory,
+- perturbation scenario,
+- high curvature trajectory.
+
+---
+
+# PID Controller Design
+
+The lateral guidance system uses a PID controller to minimize tracking errors.
+
+The controller relies on:
+
+- lateral trajectory error,
+- orientation error.
+
+The PID controller is implemented directly under Simulink using PID Controller blocks.
+
+## PID Controller Implementation
+
+_Insert PID controller image here._
+
+The controller parameters are tuned using the Simulink PID Tuner tool in order to obtain a compromise between:
+
+- tracking precision,
+- system stability,
+- response speed.
+
+## PID Tuning
+
+_Insert PID tuner image here._
+
+---
+
+# Stateflow Supervision
+
+The system operating modes are managed using Stateflow.
+
+The finite state machine includes the following states:
+
+- Init,
+- Standby,
+- Nominal,
+- Emergency.
 
 Transitions depend on:
 
-- system activation
-- trajectory error
-- fault detection
+- system activation,
+- fault detection,
+- trajectory error thresholds.
+
+## Stateflow FSM
+
+_Insert Stateflow diagram image here._
 
 ---
 
-# 🧪 Validation Workflow
+# MIL Validation
 
-## ✅ MIL – Model In the Loop
+The first validation phase is performed using a Model-In-the-Loop (MIL) approach.
 
-Validation of the control algorithm directly in Simulink.
+The complete control architecture is simulated directly in Simulink in order to evaluate system behavior under multiple operating conditions.
 
-### Tested Scenarios
+## MIL Simulation
 
-- Nominal trajectory
-- Fast trajectory variations
-- Perturbation injection
-- High curvature trajectory
+_Insert MIL simulation image here._
 
----
+The obtained results show:
 
-## ✅ SIL – Software In the Loop
-
-Generated controller code is executed in a software environment and compared with the original model.
-
-### Result
-
-✔️ No difference between MIL and SIL outputs.
+- good trajectory tracking,
+- stable vehicle behavior,
+- low tracking error under nominal conditions.
 
 ---
 
-## ✅ PIL – Processor In the Loop
+# SIL Validation
 
-The generated code is deployed and executed on an Arduino target.
+Software-In-the-Loop validation is used to verify the consistency between:
 
-### Objective
+- the Simulink model,
+- the generated embedded code.
 
-- Validate embedded execution
-- Verify generated code behavior on real processor
+The controller code is automatically generated and executed in a software environment.
+
+## SIL Architecture
+
+_Insert SIL validation image here._
+
+The comparison between MIL and SIL outputs confirms that the generated code reproduces the same behavior as the original Simulink model.
 
 ---
 
-# 📊 Visualization
+# PIL Validation
+
+Processor-In-the-Loop validation allows execution of the generated code directly on an embedded target.
+
+In this project, the controller is deployed on an Arduino board while maintaining the simulation environment under Simulink.
+
+## PIL Validation
+
+_Insert PIL validation image here._
+
+The obtained results validate:
+
+- correct embedded execution,
+- consistency between processor execution and simulation model.
+
+---
+
+# 2D and 3D Visualization
+
+Visualization tools are integrated to facilitate system analysis and result interpretation.
+
+The project includes:
+
+- 2D trajectory visualization,
+- scope monitoring,
+- real-time vehicle visualization,
+- 3D simulation environment.
 
 ## 2D Visualization
 
-- XY Graph trajectory tracking
-- Scope analysis
-- Real-time signals
+_Insert 2D trajectory image here._
 
 ## 3D Simulation
 
-A 3D scene is integrated to visualize:
+_Insert 3D simulation image here._
 
-- vehicle movement
-- road tracking
-- steering behavior
+The 3D simulation provides a realistic representation of vehicle motion and trajectory tracking behavior.
 
 ---
 
-# 🛠️ Tools & Technologies
+# Technologies and Tools
+
+The project was developed using:
 
 - MATLAB
 - Simulink
 - Stateflow
-- PID Tuner
 - Simulink Dashboard
+- Simulink PID Tuner
 - Simulink 3D Animation
-- Arduino (PIL validation)
+- Embedded Coder
+- Arduino
 
 ---
 
-# 📚 SysML Modeling
+# Validation Workflow
 
-The project also includes SysML analysis and modeling:
+The project follows a progressive Model Based Design validation methodology:
 
-- Use Case Diagram
-- Requirement Diagram
-- BDD Diagram
-- IBD Diagram
-- State Machine Diagram
-
----
-
-# 🚀 How to Run
-
-## Open MATLAB
-
-Then open:
-
-```matlab
-MIL.slx
-```
-
-Run the simulation using:
-
-```matlab
-Run
-```
-
-Use the Dashboard knob to switch between scenarios.
+1. System modeling
+2. Simulation under MATLAB/Simulink
+3. MIL validation
+4. SIL validation
+5. PIL validation
+6. Visualization and analysis
 
 ---
 
-# 📈 Project Objectives
+# Academic Context
 
-- Understand Model Based Design workflow
-- Design a lateral guidance system
-- Validate embedded control architecture
-- Apply MIL/SIL/PIL methodologies
-- Integrate supervision and visualization
+Module: Model Based Design (MBD)
 
----
+Field: Embedded Systems and Artificial Intelligence
 
-# 👨‍💻 Author
-
-**Yasmine Sbai**  
-Embedded Systems & Artificial Intelligence Engineering Student  
-INSEA – Morocco
-
----
-
-# 👨‍🏫 Supervisor
-
-**M. Anass Mansouri**
-
----
-
-# 📄 Academic Context
-
-Mini Project – Model Based Design (MBD)  
 Academic Year: 2024/2025
 
 ---
 
-# 📷 Suggested Images to Add
+# Author
 
-You can create an `images/` folder and add:
-
-| Image | Description |
-|---|---|
-| architecture.png | Global Simulink architecture |
-| stateflow.png | FSM Stateflow |
-| simulation2D.png | 2D trajectory tracking |
-| simulation3D.png | 3D vehicle simulation |
-| sil_validation.png | MIL/SIL comparison |
-| pid_tuner.png | PID tuning |
+Yasmine Sbai
 
 ---
 
-# ⭐ Future Improvements
+# Supervisor
 
-- Advanced dynamic vehicle model
-- MPC controller
-- Sensor fusion
-- Real-time HIL platform
-- Autonomous driving extensions
-- Obstacle avoidance
+M. Anass Mansouri
