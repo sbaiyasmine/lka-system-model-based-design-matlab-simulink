@@ -1,323 +1,347 @@
-# Lateral Vehicle Guidance System using MATLAB/Simulink
+# Système de Guidage Latéral de Véhicule sous MATLAB/Simulink
 
-## Overview
+## Présentation du Projet
 
-This project presents the modeling, simulation and validation of a lateral vehicle guidance system developed using a Model Based Design (MBD) approach under MATLAB/Simulink.
+Ce projet présente la conception, la modélisation et la validation d’un système de guidage latéral de véhicule développé selon une approche Model Based Design (MBD) sous MATLAB/Simulink.
 
-The objective is to design a control architecture capable of ensuring trajectory tracking on a winding road while minimizing the lateral tracking error and maintaining vehicle stability.
+L’objectif principal est d’assurer le suivi d’une trajectoire sinueuse tout en minimisant l’erreur latérale à l’aide d’un contrôleur PID et d’une supervision sous Stateflow.
 
-The developed system integrates:
+Le système développé intègre :
 
-- a 2D kinematic vehicle model,
-- trajectory generation,
-- a PID-based lateral controller,
-- Stateflow supervision,
-- MIL, SIL and PIL validation workflows,
-- 2D and 3D visualization tools.
-
-This project was developed as part of the Model Based Design module.
+- un modèle dynamique de véhicule 2D,
+- la génération de trajectoires de référence,
+- un contrôleur PID de guidage latéral,
+- une logique de supervision Stateflow,
+- des validations MIL, SIL et PIL,
+- des outils de visualisation 2D et 3D.
 
 ---
 
-# Project Objectives
+# Objectifs du Projet
 
-The main objective of the project is to design and validate a lateral guidance system able to follow a reference trajectory under different operating conditions.
+Les principaux objectifs du projet sont :
 
-The project focuses on:
-
-- modeling the vehicle dynamics,
-- implementing a closed-loop control system,
-- minimizing trajectory tracking errors,
-- validating generated embedded code,
-- analyzing system behavior through simulations and visualization tools.
-
----
-
-# System Description
-
-The implemented architecture is based on a closed-loop control structure composed of several interconnected subsystems:
-
-- Environment subsystem responsible for trajectory generation,
-- Vehicle dynamic model (Plant),
-- PID controller,
-- Stateflow supervision logic,
-- Visualization and monitoring blocks.
-
-The controller continuously computes the steering command according to the trajectory tracking error and vehicle orientation error.
+- modéliser la dynamique latérale d’un véhicule,
+- concevoir une architecture de contrôle sous Simulink,
+- assurer le suivi d’une trajectoire complexe,
+- minimiser l’erreur de trajectoire,
+- valider le comportement du système via les approches MIL, SIL et PIL,
+- analyser le comportement du véhicule à travers des simulations 2D et 3D.
 
 ---
 
-# Vehicle Dynamic Model
+# Description Générale du Système
 
-The vehicle is modeled using a simplified 2D kinematic bicycle model.
+L’architecture globale du système repose sur une structure de contrôle en boucle fermée composée de plusieurs sous-systèmes.
 
-The system equations are defined as:
+Le système comprend principalement :
 
-\[
-\dot{x} = v \cos(\psi)
-\]
+- un bloc Environment pour la génération de trajectoire,
+- un bloc Controller pour le calcul de la commande,
+- un bloc Plant représentant le modèle dynamique du véhicule,
+- un bloc Stateflow pour la supervision,
+- des blocs de visualisation et d’analyse.
 
-\[
-\dot{y} = v \sin(\psi)
-\]
+Le contrôleur calcule en temps réel l’angle de braquage nécessaire afin de réduire l’erreur entre la trajectoire réelle et la trajectoire de référence.
 
-\[
-\dot{\psi} = \frac{v}{L} \tan(\delta)
-\]
+---
 
-Where:
+# Modèle Dynamique du Véhicule
+
+Le véhicule est modélisé à l’aide d’un modèle cinématique bicyclette 2D simplifié.
+
+Les équations dynamiques utilisées sont les suivantes :
+
+<p align="center">
+
+$ẋ = v \cos(\psi)$
+
+</p>
+
+<p align="center">
+
+$ẏ = v \sin(\psi)$
+
+</p>
+
+<p align="center">
+
+$\dot{\psi} = \frac{v}{L}\tan(\delta)$
+
+</p>
+
+Avec :
 
 | Variable | Description |
 |---|---|
-| \(x\) | Longitudinal position |
-| \(y\) | Lateral position |
-| \(\psi\) | Vehicle orientation angle |
-| \(\delta\) | Steering angle |
-| \(v\) | Vehicle speed |
-| \(L\) | Vehicle wheelbase |
+| $x$ | Position longitudinale du véhicule |
+| $y$ | Position latérale du véhicule |
+| $\psi$ | Angle d’orientation du véhicule |
+| $\delta$ | Angle de braquage |
+| $v$ | Vitesse longitudinale du véhicule |
+| $L$ | Empattement du véhicule |
 
-The adopted assumptions are:
+Les hypothèses simplificatrices adoptées sont :
 
-- constant longitudinal speed,
-- planar vehicle motion,
-- simplified kinematic behavior,
-- direct steering actuation.
+- vitesse longitudinale constante,
+- mouvement plan du véhicule,
+- dynamique cinématique simplifiée,
+- braquage direct des roues avant.
 
 ---
 
-# Simulink Architecture
+# Architecture Simulink
 
-The global Simulink architecture is organized into multiple subsystems in order to ensure modularity and readability.
+L’architecture Simulink est organisée sous forme de sous-systèmes afin de garantir une structure claire et modulaire.
 
-## Global Architecture
+## Architecture Globale
 
-_Insert global Simulink architecture image here._
+*Insérer ici une image de l’architecture globale Simulink.*
 
-The main subsystems are:
+Les principaux sous-systèmes sont :
 
 ### Environment
 
-Responsible for:
+Ce sous-système permet :
 
-- generating reference trajectories,
-- selecting simulation scenarios,
-- introducing disturbances.
+- la génération de trajectoires de référence,
+- la sélection des scénarios,
+- l’introduction des perturbations.
 
 ### Controller
 
-Responsible for:
+Le contrôleur assure :
 
-- lateral error computation,
-- orientation error computation,
-- steering command generation using PID control.
+- le calcul de l’erreur latérale,
+- le calcul de l’erreur d’orientation,
+- la génération de la commande de braquage via un PID.
 
 ### Plant
 
-Implements the vehicle dynamic model.
+Le bloc Plant implémente :
+
+- le modèle dynamique du véhicule,
+- les équations cinématiques,
+- les intégrateurs d’état.
 
 ### Supervision
 
-Implements the Stateflow finite state machine managing operating modes.
+Le système de supervision est développé sous Stateflow afin de gérer les différents modes de fonctionnement.
 
 ### Visualization
 
-Contains:
+Les blocs de visualisation permettent :
 
-- XY Graph visualization,
-- scopes,
-- vehicle visualization,
-- 3D simulation.
-
----
-
-# Reference Trajectory Generation
-
-Several reference trajectories are implemented to evaluate system behavior under different conditions.
-
-The scenario selection is performed dynamically using a Dashboard interface integrated into Simulink.
-
-## Scenario Generation Block
-
-_Insert scenario generation block image here._
-
-Implemented scenarios include:
-
-- nominal sinusoidal trajectory,
-- fast varying trajectory,
-- perturbation scenario,
-- high curvature trajectory.
+- l’affichage des trajectoires,
+- l’analyse des signaux,
+- la simulation 3D du véhicule.
 
 ---
 
-# PID Controller Design
+# Génération de Trajectoire
 
-The lateral guidance system uses a PID controller to minimize tracking errors.
+La trajectoire de référence est générée à partir d’une combinaison de fonctions sinusoïdales afin d’obtenir une route complexe et sinueuse.
 
-The controller relies on:
+La trajectoire utilisée est définie par :
 
-- lateral trajectory error,
-- orientation error.
+<p align="center">
 
-The PID controller is implemented directly under Simulink using PID Controller blocks.
+$y_{ref}(x)=A_1\sin(B_1x)+A_2\sin(B_2x)+A_3\sin(B_3x)$
 
-## PID Controller Implementation
+</p>
 
-_Insert PID controller image here._
+Cette approche permet :
 
-The controller parameters are tuned using the Simulink PID Tuner tool in order to obtain a compromise between:
+- de générer des trajectoires variées,
+- de simuler des routes complexes,
+- d’évaluer le comportement du système dans plusieurs conditions.
 
-- tracking precision,
-- system stability,
-- response speed.
+## Bloc de Génération de Trajectoire
 
-## PID Tuning
-
-_Insert PID tuner image here._
+*Insérer ici une image du bloc Environment.*
 
 ---
 
-# Stateflow Supervision
+# Conception du Contrôleur PID
 
-The system operating modes are managed using Stateflow.
+Le système utilise un contrôleur PID afin de corriger l’erreur de trajectoire.
 
-The finite state machine includes the following states:
+Le contrôleur agit à partir :
+
+- de l’erreur latérale,
+- de l’erreur d’orientation.
+
+Le PID génère la commande de braquage envoyée au modèle du véhicule.
+
+## Contrôleur PID sous Simulink
+
+*Insérer ici une image du contrôleur PID.*
+
+Les paramètres du PID sont ajustés à l’aide du Simulink PID Tuner afin d’obtenir :
+
+- une bonne précision de suivi,
+- une stabilité correcte,
+- un temps de réponse satisfaisant.
+
+## Réglage du PID
+
+*Insérer ici une image du PID Tuner.*
+
+---
+
+# Supervision Stateflow
+
+La supervision du système est réalisée à l’aide d’une machine à états développée sous Stateflow.
+
+Les états implémentés sont :
 
 - Init,
 - Standby,
 - Nominal,
 - Emergency.
 
-Transitions depend on:
+Les transitions dépendent :
 
-- system activation,
-- fault detection,
-- trajectory error thresholds.
+- de l’activation du système,
+- de la présence de défauts,
+- des seuils d’erreur.
 
-## Stateflow FSM
+## Machine à États Stateflow
 
-_Insert Stateflow diagram image here._
-
----
-
-# MIL Validation
-
-The first validation phase is performed using a Model-In-the-Loop (MIL) approach.
-
-The complete control architecture is simulated directly in Simulink in order to evaluate system behavior under multiple operating conditions.
-
-## MIL Simulation
-
-_Insert MIL simulation image here._
-
-The obtained results show:
-
-- good trajectory tracking,
-- stable vehicle behavior,
-- low tracking error under nominal conditions.
+*Insérer ici une image du diagramme Stateflow.*
 
 ---
 
-# SIL Validation
+# Validation MIL
 
-Software-In-the-Loop validation is used to verify the consistency between:
+La première phase de validation est réalisée via une approche Model In the Loop (MIL).
 
-- the Simulink model,
-- the generated embedded code.
+L’ensemble du système est simulé directement sous Simulink afin d’évaluer :
 
-The controller code is automatically generated and executed in a software environment.
+- le suivi de trajectoire,
+- la stabilité du véhicule,
+- les performances du contrôleur.
 
-## SIL Architecture
+## Simulation MIL
 
-_Insert SIL validation image here._
+*Insérer ici une image de simulation MIL.*
 
-The comparison between MIL and SIL outputs confirms that the generated code reproduces the same behavior as the original Simulink model.
+Les résultats obtenus montrent :
 
----
-
-# PIL Validation
-
-Processor-In-the-Loop validation allows execution of the generated code directly on an embedded target.
-
-In this project, the controller is deployed on an Arduino board while maintaining the simulation environment under Simulink.
-
-## PIL Validation
-
-_Insert PIL validation image here._
-
-The obtained results validate:
-
-- correct embedded execution,
-- consistency between processor execution and simulation model.
+- une bonne précision de suivi,
+- une stabilité satisfaisante,
+- une réduction importante de l’erreur latérale.
 
 ---
 
-# 2D and 3D Visualization
+# Validation SIL
 
-Visualization tools are integrated to facilitate system analysis and result interpretation.
+La validation Software In the Loop (SIL) permet de vérifier la cohérence entre :
 
-The project includes:
+- le modèle Simulink,
+- le code généré automatiquement.
 
-- 2D trajectory visualization,
-- scope monitoring,
-- real-time vehicle visualization,
-- 3D simulation environment.
+Le contrôleur généré est exécuté dans un environnement logiciel afin de comparer les résultats avec ceux du modèle original.
 
-## 2D Visualization
+## Validation SIL
 
-_Insert 2D trajectory image here._
+*Insérer ici une image SIL.*
 
-## 3D Simulation
-
-_Insert 3D simulation image here._
-
-The 3D simulation provides a realistic representation of vehicle motion and trajectory tracking behavior.
+Les résultats montrent une forte correspondance entre les sorties MIL et SIL.
 
 ---
 
-# Technologies and Tools
+# Validation PIL
 
-The project was developed using:
+La validation Processor In the Loop (PIL) consiste à exécuter le code généré sur une cible embarquée.
+
+Dans ce projet, le contrôleur est exécuté sur une carte Arduino tout en conservant l’environnement de simulation sous Simulink.
+
+## Validation PIL
+
+*Insérer ici une image PIL.*
+
+Cette étape permet de valider :
+
+- l’exécution embarquée,
+- le comportement temps réel,
+- la cohérence avec les simulations précédentes.
+
+---
+
+# Visualisation 2D et 3D
+
+Le projet intègre des outils de visualisation permettant d’analyser le comportement du système.
+
+Les visualisations comprennent :
+
+- un affichage XY Graph,
+- des scopes de signaux,
+- une représentation 2D du véhicule,
+- une simulation 3D du déplacement.
+
+## Visualisation 2D
+
+*Insérer ici une image de trajectoire 2D.*
+
+## Simulation 3D
+
+*Insérer ici une image de simulation 3D.*
+
+La visualisation 3D permet d’observer :
+
+- le déplacement du véhicule,
+- le suivi de trajectoire,
+- le comportement dynamique global.
+
+---
+
+# Outils et Technologies
+
+Le projet a été développé à l’aide des outils suivants :
 
 - MATLAB
 - Simulink
 - Stateflow
 - Simulink Dashboard
-- Simulink PID Tuner
+- PID Tuner
 - Simulink 3D Animation
 - Embedded Coder
 - Arduino
 
 ---
 
-# Validation Workflow
+# Méthodologie de Validation
 
-The project follows a progressive Model Based Design validation methodology:
+Le projet suit une démarche progressive de validation MBD :
 
-1. System modeling
-2. Simulation under MATLAB/Simulink
-3. MIL validation
-4. SIL validation
-5. PIL validation
-6. Visualization and analysis
-
----
-
-# Academic Context
-
-Module: Model Based Design (MBD)
-
-Field: Embedded Systems and Artificial Intelligence
-
-Academic Year: 2024/2025
+1. Modélisation du système
+2. Simulation sous Simulink
+3. Validation MIL
+4. Validation SIL
+5. Validation PIL
+6. Analyse et visualisation des résultats
 
 ---
 
-# Author
+# Auteur
 
 Yasmine Sbai
 
+Étudiante en Systèmes Embarqués et Intelligence Artificielle
+
+INSEA – Maroc
+
 ---
 
-# Supervisor
+# Encadrant
 
 M. Anass Mansouri
+
+---
+
+# Contexte Académique
+
+Projet de Model Based Design (MBD)
+
+Année Universitaire : 2024/2025
