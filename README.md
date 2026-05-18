@@ -19,23 +19,25 @@ Le système développé intègre :
 
 # Modélisation SysML
 
-Une phase de modélisation SysML a été réalisée afin de structurer l’architecture globale du système et définir les interactions entre les différents sous-systèmes.
+Avant l’implémentation sous Simulink, une phase complète de modélisation SysML a été réalisée afin de structurer le système et définir les interactions entre les différents sous-systèmes.
 
 La modélisation SysML permet :
 
 - l’analyse des exigences fonctionnelles,
-- la définition des cas d’utilisation,
+- la définition des fonctionnalités du système,
 - l’organisation des blocs du système,
 - la structuration de l’architecture globale,
-- la préparation de l’implémentation Simulink.
+- la préparation de l’implémentation Model-Based Design.
 
-Les diagrammes SysML réalisés comprennent :
+Le projet a été modélisé à l’aide de plusieurs diagrammes SysML comprenant :
 
 - diagrammes des exigences,
 - diagrammes de cas d’utilisation,
-- diagrammes de blocs,
+- diagrammes de définition de blocs,
 - diagrammes internes de blocs,
 - architecture fonctionnelle du système.
+
+Les fichiers SysML du projet seront ajoutés dans le dépôt GitHub.
 
 ---
 
@@ -176,6 +178,8 @@ Les états principaux implémentés sont :
 - Nominal
 - Emergency
 
+Les modèles Stateflow du projet seront ajoutés dans le dépôt GitHub.
+
 ---
 
 # Validation MIL / SIL / PIL
@@ -192,6 +196,8 @@ Cette étape permet de vérifier :
 - le suivi de trajectoire,
 - les performances du contrôleur.
 
+Les modèles MIL seront disponibles dans le dépôt GitHub.
+
 ---
 
 ## SIL — Software In The Loop
@@ -202,6 +208,8 @@ La validation SIL permet de comparer :
 - le comportement du code généré automatiquement.
 
 Cette étape valide la cohérence entre le modèle et le code embarqué généré.
+
+Les modèles SIL seront disponibles dans le dépôt GitHub.
 
 ---
 
@@ -214,6 +222,8 @@ Cette étape permet :
 - l’analyse du temps d’exécution,
 - la validation du comportement embarqué,
 - la vérification de la compatibilité temps réel.
+
+Les modèles PIL seront disponibles dans le dépôt GitHub.
 
 ---
 
@@ -282,18 +292,5 @@ Le projet a été développé à l’aide des outils suivants :
 - Stateflow
 - Simulink 3D Animation
 - SysML
-
----
-
-# Perspectives d’Amélioration
-
-Les améliorations possibles du projet incluent :
-
-- l’intégration d’une vitesse variable,
-- l’ajout d’un modèle dynamique plus réaliste,
-- la prise en compte des efforts pneumatiques,
-- la validation HIL sur matériel embarqué,
-- l’intégration de capteurs réels,
-- l’amélioration de l’environnement 3D.
 
 ---
