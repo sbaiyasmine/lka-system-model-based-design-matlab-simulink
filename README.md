@@ -18,19 +18,19 @@ Le système développé repose sur :
 
 ---
 
-# Analyse et Modélisation du Système
+# Analyse et Modélisation SysML
 
-L’architecture du système a été conçue selon une approche hiérarchique séparant clairement :
+Une modélisation SysML a été réalisée afin de structurer l’architecture globale du système ainsi que les interactions entre les différents sous-systèmes.
 
-- l’environnement,
-- le contrôleur,
-- le plant,
-- les capteurs,
-- la supervision.
+L’analyse SysML permet de définir :
 
-Une modélisation SysML a été utilisée afin de structurer les exigences, les interactions et l’architecture globale du système.
+- les exigences fonctionnelles,
+- les interactions entre composants,
+- les flux de données,
+- les fonctions principales du système,
+- la structure globale du projet.
 
-Les principaux éléments modélisés sous SysML sont :
+Les diagrammes SysML réalisés comprennent :
 
 - diagrammes des exigences,
 - diagrammes de cas d’utilisation,
@@ -38,7 +38,13 @@ Les principaux éléments modélisés sous SysML sont :
 - diagrammes internes de blocs,
 - architecture fonctionnelle du système.
 
-Cette étape permet d’assurer une cohérence entre les besoins fonctionnels et l’implémentation sous Simulink.
+<p align="center">
+  <img src="images/sysml.png" width="850">
+</p>
+
+<p align="center">
+Modélisation SysML du système de guidage latéral.
+</p>
 
 ---
 
@@ -55,10 +61,10 @@ L’architecture globale du modèle Simulink est organisée autour des sous-syst
 - Stateflow Supervision
 - Visualisation 2D/3D
 
-Le modèle principal respecte une architecture claire séparant :
+Le modèle principal respecte une séparation claire entre :
 
-- la partie commande,
-- la partie dynamique véhicule,
+- la commande,
+- la dynamique du véhicule,
 - la supervision,
 - les scénarios de test.
 
@@ -72,13 +78,45 @@ Architecture globale du système sous Simulink.
 
 ---
 
+# Génération de la Trajectoire de Référence
+
+La trajectoire de référence est générée à partir d’une combinaison de fonctions sinusoïdales afin de produire une route sinueuse complexe.
+
+La trajectoire utilisée est définie par :
+
+<p align="center">
+
+y_ref(x) = A1 sin(B1 x) + A2 sin(B2 x) + A3 sin(B3 x)
+
+</p>
+
+Cette approche permet :
+
+- plusieurs variations de courbure,
+- des changements de direction progressifs,
+- une meilleure validation du contrôleur PID.
+
+<p align="center">
+  <img src="images/trajectory_generation.png" width="850">
+</p>
+
+<p align="center">
+Génération de la trajectoire sinueuse de référence.
+</p>
+
+---
+
 # Modèle Dynamique du Véhicule
 
 Le véhicule est représenté par un modèle cinématique bicyclette simplifié 2D.
 
-Ce modèle permet de représenter le déplacement longitudinal, latéral ainsi que l’orientation du véhicule à l’aide d’équations simples compatibles avec une approche pédagogique MBD.
+Ce modèle permet de représenter :
 
-Les équations utilisées sont :
+- la position longitudinale,
+- la position latérale,
+- l’orientation du véhicule.
+
+Les équations dynamiques utilisées sont :
 
 <p align="center">
 
@@ -106,7 +144,7 @@ avec :
 
 # Hypothèses Simplificatrices
 
-Le modèle adopté repose sur plusieurs hypothèses simplificatrices :
+Le modèle adopté repose sur les hypothèses suivantes :
 
 - vitesse longitudinale constante,
 - mouvement plan 2D,
@@ -115,27 +153,7 @@ Le modèle adopté repose sur plusieurs hypothèses simplificatrices :
 - absence de transfert de charge,
 - véhicule représenté par un modèle bicyclette simplifié.
 
-Ces hypothèses permettent d’obtenir un modèle simple, stable et facilement exploitable sous Simulink.
-
----
-
-# Génération de la Route de Référence
-
-La trajectoire de référence est générée à partir d’une combinaison de fonctions sinusoïdales afin d’obtenir une route sinueuse complexe.
-
-La trajectoire utilisée est définie par :
-
-<p align="center">
-
-y_ref(x) = A1 sin(B1 x) + A2 sin(B2 x) + A3 sin(B3 x)
-
-</p>
-
-Cette approche permet :
-
-- une variation progressive de la courbure,
-- plusieurs changements de direction,
-- une meilleure validation du contrôleur.
+Ces hypothèses permettent d’obtenir un modèle simple, stable et compatible avec une approche pédagogique MBD.
 
 ---
 
@@ -143,12 +161,12 @@ Cette approche permet :
 
 Le guidage latéral du véhicule est assuré par un contrôleur PID.
 
-Le rôle du contrôleur est de calculer l’angle de braquage nécessaire afin de réduire :
+Le rôle du contrôleur est de calculer l’angle de braquage permettant de réduire :
 
 - l’erreur latérale,
 - l’erreur d’orientation.
 
-Le contrôleur agit continuellement sur le véhicule afin d’assurer le suivi de la trajectoire de référence.
+Le contrôleur agit continuellement sur le véhicule afin d’assurer le suivi de trajectoire.
 
 <p align="center">
   <img src="images/pid_controller.png" width="750">
@@ -190,7 +208,7 @@ Machine à états Stateflow du système.
 
 # Validation MIL / SIL / PIL
 
-Le projet intègre plusieurs niveaux de validation conformément à une démarche Model-Based Design.
+Le projet intègre plusieurs niveaux de validation conformément à une approche Model-Based Design.
 
 ## MIL — Model In The Loop
 
