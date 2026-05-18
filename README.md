@@ -1,122 +1,96 @@
-# Système de Guidage Latéral de Véhicule sous MATLAB/Simulink
+# Lane Keeping Assist (LKA) System under MATLAB/Simulink
 
-## Présentation Générale
+## Project Overview
 
-Ce projet présente la conception, la modélisation et la validation d’un système de guidage latéral de véhicule développé selon une approche Model-Based Design (MBD) sous MATLAB/Simulink.
+This project presents the design, modeling and validation of a Lane Keeping Assist (LKA) system developed under MATLAB/Simulink using a Model-Based Design (MBD) approach.
 
-L’objectif principal est d’assurer le suivi automatique d’une trajectoire sinueuse tout en minimisant l’erreur latérale à l’aide d’un contrôleur PID associé à une supervision sous Stateflow.
+The objective of the system is to ensure autonomous lateral vehicle guidance on a complex sinuous road while minimizing the trajectory tracking error using a PID controller associated with Stateflow supervision.
 
-Le système développé repose sur :
+The developed system integrates:
 
-- une modélisation dynamique simplifiée du véhicule,
-- une génération de route sinueuse,
-- un calcul des erreurs de trajectoire,
-- une commande PID,
-- une supervision Stateflow,
-- une validation MIL / SIL / PIL,
-- une visualisation 2D et 3D.
-
----
-
-# Analyse et Modélisation SysML
-
-Une modélisation SysML a été réalisée afin de structurer l’architecture globale du système ainsi que les interactions entre les différents sous-systèmes.
-
-L’analyse SysML permet de définir :
-
-- les exigences fonctionnelles,
-- les interactions entre composants,
-- les flux de données,
-- les fonctions principales du système,
-- la structure globale du projet.
-
-Les diagrammes SysML réalisés comprennent :
-
-- diagrammes des exigences,
-- diagrammes de cas d’utilisation,
-- diagrammes de blocs,
-- diagrammes internes de blocs,
-- architecture fonctionnelle du système.
-
-<p align="center">
-  <img src="images/sysml.png" width="850">
-</p>
-
-<p align="center">
-Modélisation SysML du système de guidage latéral.
-</p>
+- a simplified 2D vehicle dynamic model,
+- a trajectory generation environment,
+- a PID steering controller,
+- Stateflow supervision,
+- MIL / SIL / PIL validations,
+- 2D and 3D visualization.
 
 ---
 
-# Architecture Simulink du Système
+# SysML Modeling
 
-L’architecture globale du modèle Simulink est organisée autour des sous-systèmes suivants :
+A SysML modeling phase was carried out in order to structure the system architecture and define the interactions between the different subsystems.
+
+The SysML analysis includes:
+
+- requirements diagrams,
+- use case diagrams,
+- block definition diagrams,
+- internal block diagrams,
+- functional architecture diagrams.
+
+This modeling phase allows a clear transition between system requirements and Simulink implementation.
+
+---
+
+# Simulink Global Architecture
+
+The global Simulink model is organized around several clearly separated subsystems:
 
 - Environment
 - Error Computation
-- Controller
-- Actuator
+- PID Controller
 - Plant
 - Sensors
 - Stateflow Supervision
-- Visualisation 2D/3D
+- Visualization
 
-Le modèle principal respecte une séparation claire entre :
-
-- la commande,
-- la dynamique du véhicule,
-- la supervision,
-- les scénarios de test.
+The adopted architecture follows a modular Model-Based Design methodology.
 
 <p align="center">
-  <img src="images/architecture.png" width="950">
+  <img src="images/archi_simulink.png" width="950">
 </p>
 
 <p align="center">
-Architecture globale du système sous Simulink.
+Global Simulink architecture of the Lane Keeping Assist system.
 </p>
 
 ---
 
-# Génération de la Trajectoire de Référence
+# Environment and Trajectory Generation
 
-La trajectoire de référence est générée à partir d’une combinaison de fonctions sinusoïdales afin de produire une route sinueuse complexe.
+The Environment subsystem generates the reference trajectory used by the controller.
 
-La trajectoire utilisée est définie par :
+The reference road is modeled using a combination of sinusoidal functions in order to generate a complex sinuous road.
 
-<p align="center">
+The Environment subsystem generates:
 
-y_ref(x) = A1 sin(B1 x) + A2 sin(B2 x) + A3 sin(B3 x)
-
-</p>
-
-Cette approche permet :
-
-- plusieurs variations de courbure,
-- des changements de direction progressifs,
-- une meilleure validation du contrôleur PID.
+- reference lateral position,
+- reference orientation,
+- disturbances,
+- test scenarios.
 
 <p align="center">
-  <img src="images/trajectory_generation.png" width="850">
+  <img src="images/environment.png" width="850">
 </p>
 
 <p align="center">
-Génération de la trajectoire sinueuse de référence.
+Environment subsystem and trajectory generation model.
 </p>
 
 ---
 
-# Modèle Dynamique du Véhicule
+# Vehicle Dynamic Model
 
-Le véhicule est représenté par un modèle cinématique bicyclette simplifié 2D.
+The vehicle is modeled using a simplified 2D kinematic bicycle model.
 
-Ce modèle permet de représenter :
+The adopted model represents:
 
-- la position longitudinale,
-- la position latérale,
-- l’orientation du véhicule.
+- longitudinal motion,
+- lateral motion,
+- vehicle orientation.
 
-Les équations dynamiques utilisées sont :
+The system equations are:
 
 <p align="center">
 
@@ -128,189 +102,192 @@ dψ/dt = (v / L) tan(δ)
 
 </p>
 
-avec :
+Where:
 
 | Variable | Description |
 |---|---|
-| x | Position longitudinale |
-| y | Position latérale |
-| ψ | Orientation du véhicule |
-| δ | Angle de braquage |
-| v | Vitesse longitudinale |
-| L | Empattement |
-| dy_pert | Perturbation latérale |
+| x | Longitudinal position |
+| y | Lateral position |
+| ψ | Vehicle orientation |
+| δ | Steering angle |
+| v | Vehicle speed |
+| L | Vehicle wheelbase |
+| dy_pert | Lateral disturbance |
 
 ---
 
-# Hypothèses Simplificatrices
+# Simplifying Assumptions
 
-Le modèle adopté repose sur les hypothèses suivantes :
+The adopted model is based on the following assumptions:
 
-- vitesse longitudinale constante,
-- mouvement plan 2D,
-- faibles angles de braquage,
-- absence de dynamique complexe des pneus,
-- absence de transfert de charge,
-- véhicule représenté par un modèle bicyclette simplifié.
+- constant longitudinal speed,
+- planar 2D motion,
+- moderate steering angles,
+- no complex tire dynamics,
+- no load transfer effects,
+- simplified bicycle vehicle representation.
 
-Ces hypothèses permettent d’obtenir un modèle simple, stable et compatible avec une approche pédagogique MBD.
+These assumptions allow a simple and stable model compatible with a pedagogical MBD approach.
 
 ---
 
-# Contrôleur PID
+# PID Controller
 
-Le guidage latéral du véhicule est assuré par un contrôleur PID.
+The lateral guidance system is controlled using a PID controller.
 
-Le rôle du contrôleur est de calculer l’angle de braquage permettant de réduire :
+The controller continuously computes the steering angle required to minimize the trajectory tracking error.
 
-- l’erreur latérale,
-- l’erreur d’orientation.
+The controller acts on:
 
-Le contrôleur agit continuellement sur le véhicule afin d’assurer le suivi de trajectoire.
+- lateral position error,
+- orientation error.
 
 <p align="center">
-  <img src="images/pid_controller.png" width="750">
+  <img src="images/controller.png" width="750">
 </p>
 
 <p align="center">
-Implémentation du contrôleur PID sous Simulink.
+PID controller implementation under Simulink.
 </p>
 
 ---
 
-# Supervision Stateflow
+# Stateflow Supervision
 
-La supervision du système est réalisée à l’aide d’une machine à états Stateflow.
+System supervision is implemented using a Stateflow finite state machine.
 
-La logique de supervision permet :
+The Stateflow logic manages:
 
-- l’initialisation du système,
-- le passage en mode opérationnel,
-- la détection des défauts,
-- l’activation du mode sécurité.
+- system initialization,
+- operational activation,
+- fault management,
+- emergency behavior.
 
-Les états principaux implémentés sont :
+The implemented states are:
 
 - Init
 - Standby
 - Nominal
 - Emergency
 
-<p align="center">
-  <img src="images/stateflow.png" width="700">
-</p>
-
-<p align="center">
-Machine à états Stateflow du système.
-</p>
-
 ---
 
-# Validation MIL / SIL / PIL
+# MIL / SIL / PIL Validation
 
-Le projet intègre plusieurs niveaux de validation conformément à une approche Model-Based Design.
+The project integrates several validation levels according to the Model-Based Design methodology.
 
 ## MIL — Model In The Loop
 
-Validation fonctionnelle complète du modèle Simulink.
+MIL validation is used to validate the complete Simulink model behavior.
 
-Cette étape permet de vérifier :
+This phase verifies:
 
-- le comportement dynamique,
-- le suivi de trajectoire,
-- les performances du contrôleur.
+- vehicle dynamics,
+- trajectory tracking,
+- controller performance.
 
 ---
 
 ## SIL — Software In The Loop
 
-Validation du code généré automatiquement à partir du modèle Simulink.
+SIL validation compares:
 
-Cette étape permet de comparer :
+- Simulink model behavior,
+- generated controller code behavior.
 
-- le comportement du modèle,
-- le comportement du code généré.
+This step validates automatic code generation consistency.
 
 ---
 
 ## PIL — Processor In The Loop
 
-Validation du contrôleur compilé sur une cible processeur.
+PIL validation evaluates the controller compiled on a processor target.
 
-Cette étape permet :
+This phase allows:
 
-- l’analyse du temps d’exécution,
-- la vérification du comportement embarqué,
-- la validation de la compatibilité temps réel.
-
----
-
-# Simulation 2D
-
-Une visualisation 2D est utilisée afin d’observer :
-
-- la trajectoire de référence,
-- la trajectoire réelle du véhicule,
-- l’évolution de l’erreur latérale.
-
-<p align="center">
-  <img src="images/trajectory2D.png" width="850">
-</p>
-
-<p align="center">
-Suivi de trajectoire dans le plan XY.
-</p>
+- execution time analysis,
+- embedded controller validation,
+- real-time compatibility verification.
 
 ---
 
-# Simulation 3D
+# 2D Visualization
 
-Une scène 3D est intégrée afin de visualiser le déplacement du véhicule sur une route sinueuse complexe.
+A 2D visualization is used to analyze:
 
-La simulation 3D permet :
-
-- une meilleure interprétation du comportement dynamique,
-- une visualisation réaliste du guidage latéral,
-- une démonstration complète du système.
+- reference trajectory,
+- real vehicle trajectory,
+- lateral tracking error evolution.
 
 <p align="center">
-  <img src="images/simulation3D.png" width="950">
+  <img src="images/scen2_2D.png" width="850">
 </p>
 
 <p align="center">
-Visualisation 3D du véhicule sous Simulink.
+2D trajectory tracking visualization.
 </p>
 
 ---
 
-# Résultats Obtenus
+# 3D Simulation
 
-Les simulations réalisées montrent :
+A 3D scene is integrated in order to visualize the vehicle moving on a complex sinuous road.
 
-- un suivi correct de trajectoire,
-- une réduction significative de l’erreur latérale,
-- une bonne stabilité du véhicule,
-- un comportement cohérent dans différents scénarios.
+The 3D simulation provides:
 
-Les différents tests réalisés incluent :
+- realistic vehicle visualization,
+- dynamic behavior interpretation,
+- complete project demonstration.
 
-- scénario nominal,
-- changement de consigne,
-- perturbation latérale,
-- défaut simplifié.
+<p align="center">
+  <img src="images/3D_simulation.png" width="950">
+</p>
+
+<p align="center">
+3D vehicle visualization under Simulink.
+</p>
 
 ---
 
-# Perspectives d’Amélioration
+# Obtained Results
 
-Les principales améliorations possibles sont :
+The obtained simulation results show:
 
-- intégration d’une vitesse variable,
-- ajout d’un modèle dynamique plus réaliste,
-- prise en compte des effets pneumatiques,
-- intégration de capteurs réels,
-- validation HIL sur matériel embarqué,
-- amélioration de la visualisation 3D,
-- intégration d’un environnement routier plus complexe.
+- correct trajectory tracking,
+- significant lateral error reduction,
+- stable vehicle behavior,
+- coherent response under different scenarios.
+
+The implemented test scenarios include:
+
+- nominal scenario,
+- trajectory change,
+- lateral disturbance,
+- simplified fault scenario.
+
+---
+
+# Software and Tools
+
+The project was developed using:
+
+- MATLAB
+- Simulink
+- Stateflow
+- Simulink 3D Animation
+- SysML
+
+---
+
+# Future Improvements
+
+Possible future improvements include:
+
+- variable speed integration,
+- more realistic dynamic vehicle model,
+- tire force modeling,
+- Hardware-In-the-Loop (HIL) validation,
+- real sensor integration,
+- advanced 3D road environment generation.
 
 ---
